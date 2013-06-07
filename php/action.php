@@ -18,6 +18,24 @@ foreach($_GET as $key=>$val){
 if (isset($_['action'])) {
 
   switch ($_['action']) {
+  
+  case 'findOtherImage':
+  	if (isset($_['designId']) && isset($_['material'])) {
+  		
+  		$javascript['succes'] = true;
+  		
+  		$brick = findOtherImage($_['designId'], $_['material']);
+  		
+  		$javascript['url'] = $brick->url;
+  		$javascript['material'] = $brick->material;
+  		$javascript['designId'] = $brick->designId;
+  	
+  	} else {
+  		$javascript['status'] = "Problème de paramètres.";
+  	}  
+  break;
+
+  
   case 'upload':
     if (array_key_exists('files', $_FILES) && $_FILES['files']['error'][0] == 0 ) {
       require_once('zip.class.php');
@@ -49,8 +67,10 @@ if (isset($_['action'])) {
 
 	  $html = "<table class='table'><tr><td>Image</td><td>DesignId</td><td>Material</td><td>Qty</td></tr>";
 	  $qtyTotal = 0;
-	  foreach ($s as $key => $value) {
-	  	foreach ($s[$key] as $mat => $qty) {
+	  $id = 0;
+	  $htmlSelect = createSelectList();
+	  foreach ($s as $designId => $value) {
+	  	foreach ($s[$designId] as $mat => $qty) {
 			$html .= "<tr>";
 			
 			$tradColor = extractColor($mat);
@@ -58,13 +78,16 @@ if (isset($_['action'])) {
 				$tradColor = $tabColor[extractColor($mat)];
 			}
 			
-			$html .= "<td><img src='http://img.bricklink.com/P/" . $tradColor . "/" . $key . ".gif' /></td>";
-			$html .= "<td>" . $key . "</td>";
-			$html .= "<td>" . $tradColor . "</td>";
-			$html .= "<td>" . $qty . "</td>";
+			$brick = getBricksImagePath($designId, $tradColor);
+			
+			$html .= "<td><img id='idImg" . $id . "' onerror='addButonSearchRef(this, " . $brick->designId . ", " . $brick->material . ")' src='" . $brick->url . "' /></td>";
+			$html .= "<td id='idDesignId" . $id . "'>" . $designId . "</td>";
+			$html .= "<td id='idMaterial" . $id . "'>" . $brick->material . "</td>";
+			//$html .= "<input type='hidden' id='idQtyInit" . $id . "' value='" . $qty . "' />";
+			$html .= "<td><span id='idQtyFinal" . $id . "'>" . $qty . "</span><input type='hidden' id='idQtyInit" . $id . "' value='" . $qty . "' /></td>";
 			$html .= "</tr>";
 			$qtyTotal += $qty;
-			getBricksImage($key, $tradColor);
+			$id++;
 	  	}
 	  }
 	  $html .= "</table>";

@@ -60,10 +60,27 @@ $(function() {
 	    + '				<td><span class="filename">Nombre de pièces : </span></td>'
 	    + '				<td><span class="filename" id="nbBricks"></span></td>'
 	    + '			</tr>'
+	    + '			<tr>'
+	    + '				<td>Nombre d\'exemplaires : </td>'
+	    + '				<td>'
+	    + '					<select onchange="multAllQty(this.value)" >'
+	    + '						<option value="1">1</option>'
+	    + '						<option value="2">2</option>'
+	    + '						<option value="3">3</option>'
+	    + '						<option value="4">4</option>'
+	    + '						<option value="5">5</option>'
+	    + '					</select>'
+	    + '				</td>'
+	    + '			</tr>'
+	    + '			<tr>'
+	    + '				<td colspan="2">'
+	    + '					<a class="btn btn-danger" onclick="findAllRef();">Find All Ref</a>'
+	    + '					<a class="btn btn-success" onclick="generateXml();">Generate XML<i class="icon-arrow-down icon-white"></i></a>'
+	    + '				</td>'
+	    + '			</tr>'
 	    + '		</table>'
 	    + '</div>'
-	    + '<br/>'
-	    + '<div id="table" class="span9" align="center"></div>';
+	    + '<div id="table" class="span12" style="padding-left: 20px;"></div>';
 
 
 	function showInfo(result) {
@@ -85,7 +102,6 @@ $(function() {
 		
 	    $('#idDivInfo').html(preview);
 	}
-
 	
 	function showMessage(msg){
 		message.html(msg);
@@ -95,7 +111,69 @@ $(function() {
 
 });
 
+function addButonSearchRef(elem, designId, material) {
+	var parent = elem.parentNode;
+	var id = elem.id.replace("idImg", "");
+	elem.remove();
+	
+	var element = document.createElement('input');
+	
+	element.type = "button";
+	element.id = "btnFindRef" + id;
+	element.className = "btn btn-danger";
+	element.value = "Find Ref";
+	element.onclick = function() {
+		findOtherImage(element, designId, material, id);
+	}
 
+	parent.appendChild(element);
+}
+
+function findAllRef() {
+	$('input[id^=btnFindRef]').each(function () {
+		$(this).click();
+	})
+}
+
+function findOtherImage(elem, designId, material, id) {
+	// Appelle Ajax pour trouver une autre image
+	if (designId == null) { designId=''; } else { designId = "&designId=" + designId}
+	if (material == null) { material=''; } else { material = "&material=" + material}
+	$.ajax({
+		url: "php/action.php?action=findOtherImage" + designId + material,
+		success: function(returnedValue){
+		
+			response = $.parseJSON(returnedValue);
+			if(response.succes){
+			
+				var parent = elem.parentNode;
+	
+				elem.remove();
+			
+				var element = document.createElement('img');
+				element.src = response.url;
+				
+				// On met à jour la couleur (qui peut avoir changé)
+				$('#idMaterial' + id).text(response.material);
+				
+				// On met à jour le designId (qui peut avoir changé)
+				$('#idDesignId' + id).text(response.designId);
+			
+				parent.appendChild(element);
+			
+			}
+		}
+	});
+}
+
+
+function multAllQty(coef) {
+	$('span[id^=idQtyFinal]').each(function () {
+		$(this).text($('#idQtyInit' + $(this).attr("id").replace('idQtyFinal', '')).val() * coef);
+	});
+}
+
+//----------------------------------------------------
 
 
 function checkPendingTask(){
