@@ -53,17 +53,18 @@ if (isset($_['action'])) {
 	  	foreach ($s[$key] as $mat => $qty) {
 			$html .= "<tr>";
 			
-			$tradColor = 1;
-			if (isset($tabColor[$mat])) {
-				$tradColor = $tabColor[$mat];
+			$tradColor = extractColor($mat);
+			if (isset($tabColor[extractColor($mat)])) {
+				$tradColor = $tabColor[extractColor($mat)];
 			}
 			
 			$html .= "<td><img src='http://img.bricklink.com/P/" . $tradColor . "/" . $key . ".gif' /></td>";
 			$html .= "<td>" . $key . "</td>";
-			$html .= "<td>" . extractColor($mat) . "</td>";
+			$html .= "<td>" . $tradColor . "</td>";
 			$html .= "<td>" . $qty . "</td>";
 			$html .= "</tr>";
 			$qtyTotal += $qty;
+			getBricksImage($key, $tradColor);
 	  	}
 	  }
 	  $html .= "</table>";

@@ -1,6 +1,26 @@
 <?php
 require_once('config.php');
 require_once('KLogger.php');
+require_once('bdd.php');
+
+function getBricksImage($designId, $material) {
+  $db = new SQliteDB();
+  $path = $db->searchBrick($designId, $material);
+
+  if (isset($path) && $path != '') {
+    return $path;
+  }
+
+  $url = "http://img.bricklink.com/P/" . $material . "/" . $designId . ".gif";
+  $headers = @get_headers($url);
+  if(strpos($headers[0],'200')===false) {
+    logInfo("Image " . $url . " n'existe pas sur bricklink");
+  } else {
+    file_put_contents("../tpl/img/bricks/" . $designId . "-" . $material . ".gif", fopen($url, 'r'));
+  }
+
+}
+
 
 function logInfo($txt) {
   $log = new KLogger('../log', KLogger::DEBUG);
