@@ -16,6 +16,8 @@ Plugins :
 - Jquery (www.jquery.com)
 - PclZip (www.phpconcept.net/pclzip/)
 - RainTPL (www.raintpl.com)
+- Bootstrap (twitter.github.io/bootstrap)
+- KLogger (codefury.net/projects/klogger)
 		  
 Icones : N.A
 
