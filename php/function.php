@@ -11,7 +11,7 @@ function get_extension($file_name){
 }
 
 function parseXml($filename) {
-	$log = new KLogger('function.log', KLogger::DEBUG); # Specify the log directory
+	$log = new KLogger('../log', KLogger::DEBUG); # Specify the log directory
 	$log->logInfo("fichier a parser = " . $filename);
 	$document_xml = new DomDocument();
 	$document_xml->load($filename);
@@ -42,7 +42,7 @@ function parseChilds($node, $s) {
 function parseNode($node, $s) {
 	$nom = $node->nodeName;
 	
-	$log = new KLogger('function.log', KLogger::DEBUG); # Specify the log directory
+	$log = new KLogger('../log', KLogger::DEBUG); # Specify the log directory
 	
 	
 	if ($nom == 'Part') {
