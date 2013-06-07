@@ -38,31 +38,51 @@ $(function() {
 			    $.data(data.files[0]).find('.progress').width(progress+'%');
 			},
 			    success: function (result, textStatus, jqXHR) {
-			    showInfo(result.img);
+			    showInfo(result);
 			}
 		    });
 	    });
 
 
-	//	var templateInfo = '<div><img /></div><div><span class="fileName"></span><div>';
 	var templateInfo = '<div class="row">'
-	    + '<div class="span4"><div align="center"><img /></div></div>'
-	    + '<div class="span8"><span class="fileName"></span><span>salut</span></div>'
-	    + '</div>';
+	    + '<div class="span4">'
+	    + '		<div align="center">'
+	    + '			<img />' 
+	    + '		</div>'
+	    + '</div>'
+	    + '<div class="span8">' 
+	    + '		<table width="100%">'
+	    + '			<tr>'
+	    + '				<td width="25%"><span class="filename">Fichier : </span></td>'
+	    + '				<td><span class="filename" id="filename"></span></td>'
+	    + '			</tr>'
+	    + '			<tr>'
+	    + '				<td><span class="filename">Nombre de pièces : </span></td>'
+	    + '				<td><span class="filename" id="nbBricks"></span></td>'
+	    + '			</tr>'
+	    + '		</table>'
+	    + '</div>'
+	    + '<br/>'
+	    + '<div id="table" class="span9" align="center"></div>';
 
 
-	function showInfo(token) {
+	function showInfo(result) {
 	    var preview = $(templateInfo), 
 		image = $('img', preview),
-		fileName = $('.fileName', preview);
+		fileName = $('#filename', preview);
+		nbBricks = $('#nbBricks', preview);
+		table = $('#table', preview);
 
 	    var size = 128;
 	    image.attr('width', size);
 	    image.attr('height', size);
-	    image.attr('src', token);
+	    image.attr('src', result.img);
 
-	    fileName.html(token);
-
+	    fileName.html(result.filename);
+		nbBricks.html(result.qtyTotal);
+		
+		table.html(result.html);
+		
 	    $('#idDivInfo').html(preview);
 	}
 

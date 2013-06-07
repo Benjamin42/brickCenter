@@ -44,10 +44,36 @@ if (isset($_['action'])) {
 	  
 	  // TODO : parser le fichier IMAGE100.LXFML
 	  // TODO : afficher le fichier IMAGE100.PNG
+	  
+	  $s = parseXml("../uploads/" . $token . "/IMAGE100.LXFML");
 
+	  $html = "<table class='table'><tr><td>Image</td><td>DesignId</td><td>Material</td><td>Qty</td></tr>";
+	  $qtyTotal = 0;
+	  foreach ($s as $key => $value) {
+	  	foreach ($s[$key] as $mat => $qty) {
+			$html .= "<tr>";
+			
+			$tradColor = 1;
+			if (isset($tabColor[$mat])) {
+				$tradColor = $tabColor[$mat];
+			}
+			
+			$html .= "<td><img src='http://img.bricklink.com/P/" . $tradColor . "/" . $key . ".gif' /></td>";
+			$html .= "<td>" . $key . "</td>";
+			$html .= "<td>" . $mat . "</td>";
+			$html .= "<td>" . $qty . "</td>";
+			$html .= "</tr>";
+			$qtyTotal += $qty;
+	  	}
+	  }
+	  $html .= "</table>";
+
+	  $javascript['qtyTotal'] = $qtyTotal;
+	  $javascript['html'] = $html;
 	  $javascript['img'] = "/brickCenter/uploads/" . $token . "/IMAGE100.PNG";
 	  $javascript['token'] = $token;
 	  $javascript['status'] = "Fichier bien déposé. Cordialement Bisous++";
+	  $javascript['filename'] = $pic['name'];
 	  $javascript['succes'] = true;
 
 	} else {
