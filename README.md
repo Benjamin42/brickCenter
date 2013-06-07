@@ -10,12 +10,12 @@ Programme : Brick Center
 Version : V0
 Distribution : BETA
 Auteurs :   
--Benjamin CORBARA aka moi (b.corbara@gmail.com	-	http://assuland.net)
+- Benjamin CORBARA aka moi (b.corbara@gmail.com	-	http://assuland.net)
 
 Plugins : 
--Jquery (www.jquery.com)
--PclZip (www.phpconcept.net/pclzip/)
--RainTPL (www.raintpl.com)
+- Jquery (www.jquery.com)
+- PclZip (www.phpconcept.net/pclzip/)
+- RainTPL (www.raintpl.com)
 		  
 Icones : N.A
 
