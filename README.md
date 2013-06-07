@@ -30,5 +30,5 @@ INSTALLATION
 <code>
 mkdir -m 775 uploads log
 </code>
-- Entrez l'adresse du brickCenter dans votre naviguateur, à la première connexion, le login et le mot de passe souhaité pour l'administrateur seront demandés.
-- Le script est installé !!
+- Entrez l'adresse du brickCenter dans votre naviguateur...
+- ...le script est installé !!
