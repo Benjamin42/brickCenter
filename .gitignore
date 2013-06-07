@@ -10,5 +10,5 @@ Icon?
 ehthumbs.db
 Thumbs.db
 
-uploads/*
-log/*
+/uploads/*
+/log/*
