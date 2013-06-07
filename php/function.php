@@ -2,7 +2,10 @@
 require_once('config.php');
 require_once('KLogger.php');
 
-
+function logInfo($txt) {
+  $log = new KLogger('../log', KLogger::DEBUG);
+  $log->logInfo($txt);
+}
 
 function get_extension($file_name){
   $ext = explode('.', $file_name);
@@ -11,8 +14,7 @@ function get_extension($file_name){
 }
 
 function parseXml($filename) {
-	$log = new KLogger('../log', KLogger::DEBUG); # Specify the log directory
-	$log->logInfo("fichier a parser = " . $filename);
+	logInfo("fichier a parser = " . $filename);
 	$document_xml = new DomDocument();
 	$document_xml->load($filename);
 	$elements = $document_xml->getElementsByTagName('LXFML');
@@ -42,9 +44,6 @@ function parseChilds($node, $s) {
 function parseNode($node, $s) {
 	$nom = $node->nodeName;
 	
-	$log = new KLogger('../log', KLogger::DEBUG); # Specify the log directory
-	
-	
 	if ($nom == 'Part') {
 		$designId = $node->attributes->getNamedItem('designID')->nodeValue;
 		$material = $node->attributes->getNamedItem('materials')->nodeValue;
@@ -55,9 +54,9 @@ function parseNode($node, $s) {
 			$s[$designId][$material] = 1;
 		}
 		
-		$log->logInfo("nom : " . $nom);
-		$log->logInfo("\tdesignId : " . $designId);
-		$log->logInfo("\tmaterial : " . $material);
+		logInfo("nom : " . $nom);
+		logInfo("\tdesignId : " . $designId);
+		logInfo("\tmaterial : " . $material);
 		//$log->logInfo("\tqty : " . $s[$p]);
 	}
 	return $s;
