@@ -60,7 +60,7 @@ if (isset($_['action'])) {
 			
 			$html .= "<td><img src='http://img.bricklink.com/P/" . $tradColor . "/" . $key . ".gif' /></td>";
 			$html .= "<td>" . $key . "</td>";
-			$html .= "<td>" . $mat . "</td>";
+			$html .= "<td>" . extractColor($mat) . "</td>";
 			$html .= "<td>" . $qty . "</td>";
 			$html .= "</tr>";
 			$qtyTotal += $qty;
