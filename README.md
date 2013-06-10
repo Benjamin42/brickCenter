@@ -10,21 +10,25 @@ Programme : Brick Center
 Version : V0
 Distribution : BETA
 Auteurs :   
--Benjamin CORBARA aka moi (b.corbara@gmail.com	-	http://assuland.net)
+- Benjamin CORBARA aka moi (b.corbara@gmail.com	-	http://assuland.net)
 
 Plugins : 
--Jquery (www.jquery.com)
--PclZip (www.phpconcept.net/pclzip/)
--RainTPL (www.raintpl.com)
+- Jquery (www.jquery.com)
+- PclZip (www.phpconcept.net/pclzip/)
+- RainTPL (www.raintpl.com)
+- Bootstrap (http://twitter.github.io/bootstrap)
+- KLogger (http://codefury.net/projects/klogger)
 		  
 Icones : N.A
-
 
 INSTALLATION
 ====
 
 - Décompressez l'archive de brickCenter
 - Envoyez le tout sur votre ftp
-- Autorisez l'écriture sur le répertoire /uploads (chmod 775)
-- Entrez l'adresse du brickCenter dans votre naviguateur, à la première connexion, le login et le mot de passe souhaité pour l'administrateur seront demandés.
-- Le script est installé !!
+- Créer les répertoires suivants à la racine :
+<code>
+mkdir -m 775 uploads log
+</code>
+- Entrez l'adresse du brickCenter dans votre naviguateur...
+- ...le script est installé !!
