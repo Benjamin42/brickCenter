@@ -2,6 +2,7 @@
 require_once('config.php');
 require_once('KLogger.php');
 require_once('bdd.php');
+require_once('simple_html_dom.php');
 
 /**********************************************************
 * Fonction de résolution du chemin de l'image de la brick
@@ -20,7 +21,7 @@ function getBricksImagePath($designId, $material) {
   		$brick->designId = $brickFunded->newDesignId;
   	}
 
-  	$brickFunded = $db->searchBrickOtherPath($designId, $material);
+  	$brickFunded = $db->searchBrickOtherPath($brick->designId, $material);
   	if ($brickFunded != null && $brickFunded->url != '') {
   		$brick->url = $brickFunded->url;
   		
@@ -55,17 +56,20 @@ function findOtherImage($designId, $material) {
   	// Essai en changeant de couleur (gris -> bluish grey)
   	if ($material == '10') { // Dark gray
   		$newMaterialId = '85';
-  		// try with 85
   	} else if ($material == '9') { // Light gray
   		$newMaterialId = '86';
-  		// try with 86
   	} else if ($material == '49') { // Very light gray
   		$newMaterialId = '99';
-  		// try with 99
+  	} else if ($material == '85') { // Dark Bluish gray
+  		$newMaterialId = '10';
+  	} else if ($material == '86') { // Light Bluish gray
+  		$newMaterialId = '9';
+  	} else if ($material == '99') { // Very light Bluish gray
+  		$newMaterialId = '49';
   	}
   	
   	if (isset($newMaterialId)) {
-  		$newUrl = tryBluishColor($designId, $newMaterialId);
+  		$newUrl = tryUrls($designId, $newMaterialId);
   		if ($newUrl != '') {
 			$db->addBrickNewPath($designId, $material, $newMaterialId, $newUrl);
 			$brick->material = $newMaterialId;
@@ -73,12 +77,23 @@ function findOtherImage($designId, $material) {
 			return $brick;
     	}
   	}
-  		
-  	$brick->url = "http://cloud6.lbox.me/images/50x50/201211/hghgut1353481378067.jpg";
+  	
+  	$newDesignId = tryFindingDifferentDesignId($designId);
+  	if ($newDesignId != '') {
+  		$newUrl = tryUrls($newDesignId, $material);
+  		if ($newUrl != '') {
+			$db->addBrickNewDesignId($designId, $newDesignId);
+			$brick->designId = $newDesignId;
+			$brick->url = $newUrl;
+			return $brick;
+    	}
+  	}
+  	
+  	$brick->url = "https://images3.rapidshare.com/web/img/facelift/cross-icon.png";
   	return $brick;
 }
 
-function tryBluishColor($designId, $material) {
+function tryUrls($designId, $material) {
 	$url = "http://img.bricklink.com/P/" . $material . "/" . $designId . ".gif";
 	
 	$headers = @get_headers($url);
@@ -92,6 +107,31 @@ function tryBluishColor($designId, $material) {
   	if(strpos($headers[0],'200')!==false) {
     	return $url;
   	}
+}
+
+function tryFindingDifferentDesignId($designId) {
+	$url = "http://www.bricklink.com/catalogList.asp?catType=P&catID=&itemYear=&searchName=Y&searchNo=Y&q=" . $designId . "&catLike=W";
+	
+	$opts = array(
+              'http'=>array(
+                            'method'=>"GET",
+                            'user_agent'=>"Mozilla/5.0"
+              )
+    );
+	$context = stream_context_create($opts);
+	$str = file_get_contents($url, false, $context);
+	$html = str_get_html($str);
+	
+	$arrayTitle = $html->find("font[face='Arial']");
+
+	foreach ($arrayTitle as $element) {
+		$str = $element->plaintext;
+		if ( preg_match("#([0-9]*)$#i", $str, $matches) ) {
+    		return($matches[1]);
+    	}
+	}
+	
+	return "";
 }
 
 /******************

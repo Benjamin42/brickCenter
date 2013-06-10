@@ -39,18 +39,21 @@ class SQliteDB extends SQLite3
 		. "VALUES ((select max(id) + 1 from bricks), '" . $designId . "', '" . $material . "', '" . $newMaterial . "', '" . $imgPath . "')";
 	$this->query($query);
   }
+  
+  function addBrickNewDesignId($designId, $newDesignId) {
+	$query = "INSERT INTO bricks (ID, DESIGN_ID, NEW_DESIGN_ID) "
+		. "VALUES ((select max(id) + 1 from bricks), '" . $designId . "', '" . $newDesignId . "')";
+	$this->query($query);
+  }
 
   function searchBrickException($designId) {
-    $query = "SELECT * FROM bricks WHERE DESIGN_ID = " . $designId . " AND MATERIAL is null";
+    $query = "SELECT DESIGN_ID, NEW_DESIGN_ID FROM bricks WHERE DESIGN_ID = '" . $designId . "' AND MATERIAL is null";
 
     $results = $this->query($query);
     while ($row = $results->fetchArray()) {
     	$brick = new Brick();
     	$brick->designId = $row['DESIGN_ID'];
     	$brick->newDesignId = $row['NEW_DESIGN_ID'];
-    	$brick->material = $row['MATERIAL'];
-    	$brick->newMaterial = $row['NEW_MATERIAL'];
-    	$brick->url = $row['URL'];
     
       	return $brick;
     }
@@ -58,18 +61,20 @@ class SQliteDB extends SQLite3
   }
   
   function searchBrickOtherPath($designId, $material) {
-    $query = "SELECT * FROM bricks WHERE DESIGN_ID = " . $designId . " AND MATERIAL = " . $material;
+    $query = "SELECT * FROM bricks WHERE DESIGN_ID = '" . $designId . "' AND MATERIAL = '" . $material . "'";
 
     $results = $this->query($query);
-    while ($row = $results->fetchArray()) {
-    	$brick = new Brick();
-    	$brick->designId = $row['DESIGN_ID'];
-    	$brick->newDesignId = $row['NEW_DESIGN_ID'];
-    	$brick->material = $row['MATERIAL'];
-    	$brick->newMaterial = $row['NEW_MATERIAL'];
-    	$brick->url = $row['URL'];
-    
-      	return $brick;
+    if ($results != null) {
+		while ($row = $results->fetchArray()) {
+			$brick = new Brick();
+			$brick->designId = $row['DESIGN_ID'];
+			$brick->newDesignId = $row['NEW_DESIGN_ID'];
+			$brick->material = $row['MATERIAL'];
+			$brick->newMaterial = $row['NEW_MATERIAL'];
+			$brick->url = $row['URL'];
+		
+			return $brick;
+		}
     }
     return null;
   }

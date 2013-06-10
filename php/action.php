@@ -81,7 +81,7 @@ if (isset($_['action'])) {
 			$brick = getBricksImagePath($designId, $tradColor);
 			
 			$html .= "<td><img id='idImg" . $id . "' onerror='addButonSearchRef(this, " . $brick->designId . ", " . $brick->material . ")' src='" . $brick->url . "' /></td>";
-			$html .= "<td id='idDesignId" . $id . "'>" . $designId . "</td>";
+			$html .= "<td id='idDesignId" . $id . "'>" . $brick->designId . "</td>";
 			$html .= "<td id='idMaterial" . $id . "'>" . $brick->material . "</td>";
 			//$html .= "<input type='hidden' id='idQtyInit" . $id . "' value='" . $qty . "' />";
 			$html .= "<td><span id='idQtyFinal" . $id . "'>" . $qty . "</span><input type='hidden' id='idQtyInit" . $id . "' value='" . $qty . "' /></td>";
