@@ -68,7 +68,7 @@ if (isset($_['action'])) {
 	  $html = "<table class='table'><tr><td>Image</td><td>DesignId</td><td>Material</td><td>Qty</td></tr>";
 	  $qtyTotal = 0;
 	  $id = 0;
-	  $htmlSelect = createSelectList();
+	  
 	  foreach ($s as $designId => $value) {
 	  	foreach ($s[$designId] as $mat => $qty) {
 			$html .= "<tr>";

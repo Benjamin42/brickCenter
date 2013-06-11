@@ -187,16 +187,24 @@ function parseNode($node, $s) {
 		$designId = $node->attributes->getNamedItem('designID')->nodeValue;
 		$material = $node->attributes->getNamedItem('materials')->nodeValue;
 		
-		if (isset($s[$designId][$material])) {
-			$s[$designId][$material] = $s[$designId][$material] + 1;
+		$key = $designId . "-" . $material;
+		$brick = null;
+		
+		if (isset($s[$key])) {
+			$brick = $s[$key];
+			$brick->qty = $brick->qty + 1;
 		} else {
-			$s[$designId][$material] = 1;
+			$brick = new Brick();
+			$brick->designId = $designId;
+			$brick->material = $material;
+			$brick->qty = 1;
+	
+			$s[$key] = $brick;
 		}
 		
 		logInfo("nom : " . $nom);
-		logInfo("\tdesignId : " . $designId);
-		logInfo("\tmaterial : " . $material);
-		//$log->logInfo("\tqty : " . $s[$p]);
+		logInfo("\tdesignId : " . $brick->designId);
+		logInfo("\tmaterial : " . $brick->material);
 	}
 	return $s;
 }

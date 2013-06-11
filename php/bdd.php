@@ -6,8 +6,10 @@ class Brick {
 	public $material;
 	public $newMaterial;
 	public $url;
+	public $qty;
 	
 	function __construct() {
+		$this->qty = 0;
 	}
 }
 
@@ -24,9 +26,11 @@ class Color {
 
 class SQliteDB extends SQLite3
 {
-  var $location="../db/dev.db";
+  var $location = null;
 
   function __construct() {
+  	$this->location = APP_DIR . "db/dev.db";
+  	
     $this->open($this->location);
   }
   
@@ -93,7 +97,7 @@ class SQliteDB extends SQLite3
 			}
 		}
 		
-		return '';
+		return $materialId;
 	}
 	
 	function searchAllColors() {

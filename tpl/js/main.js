@@ -20,12 +20,32 @@ $(function() {
 		    offsetY: 10,
 		    allowTipHover: false
 		    });
-
+/*
 
 	$(function () {
+		$.ajax({
+ 			type: "POST",
+ 			url: "details.php",
+ 			data: {fname:name, id:rno}
+		}).done(function( result ) {
+			$("#content").html( result );
+		});
+ 
+ 
+ 		$('#uploadButton').fileupload({
+ 			$.ajax({
+					type: "POST",
+					url: "details.php",
+					data: {fname:name, id:rno}
+				}).done(function( result ) {
+					$("#content").html( result );
+			});
+		});
+ */
 		$('#uploadButton').fileupload({
-			dataType: 'json',
+				type: 'POST',
 			    autoUpload: true,
+			    url: "loadModel.html",
 			    dropZone : '#uploadButton',
 			    maxFileSize: 5000000,
 			    sequentialUploads: true,
@@ -38,10 +58,11 @@ $(function() {
 			    $.data(data.files[0]).find('.progress').width(progress+'%');
 			},
 			    success: function (result, textStatus, jqXHR) {
-			    showInfo(result);
+			    //alert(result);
+			    $("#content").html( result );
+			    //showInfo(result);
 			}
-		    });
-	    });
+		});
 
 
 	var templateInfo = '<div class="row">'
