@@ -60,69 +60,8 @@ $(function() {
 			    success: function (result, textStatus, jqXHR) {
 			    //alert(result);
 			    $("#content").html( result );
-			    //showInfo(result);
 			}
 		});
-
-
-	var templateInfo = '<div class="row">'
-	    + '<div class="span4">'
-	    + '		<div align="center">'
-	    + '			<img />' 
-	    + '		</div>'
-	    + '</div>'
-	    + '<div class="span8">' 
-	    + '		<table width="100%">'
-	    + '			<tr>'
-	    + '				<td width="25%"><span class="filename">Fichier : </span></td>'
-	    + '				<td><span class="filename" id="filename"></span></td>'
-	    + '			</tr>'
-	    + '			<tr>'
-	    + '				<td><span class="filename">Nombre de pièces : </span></td>'
-	    + '				<td><span class="filename" id="nbBricks"></span></td>'
-	    + '			</tr>'
-	    + '			<tr>'
-	    + '				<td>Nombre d\'exemplaires : </td>'
-	    + '				<td>'
-	    + '					<select onchange="multAllQty(this.value)" >'
-	    + '						<option value="1">1</option>'
-	    + '						<option value="2">2</option>'
-	    + '						<option value="3">3</option>'
-	    + '						<option value="4">4</option>'
-	    + '						<option value="5">5</option>'
-	    + '					</select>'
-	    + '				</td>'
-	    + '			</tr>'
-	    + '			<tr>'
-	    + '				<td colspan="2">'
-	    + '					<a class="btn btn-danger" onclick="findAllRef();">Find All Ref</a>'
-	    + '					<a class="btn btn-success" onclick="generateXml();">Generate XML<i class="icon-arrow-down icon-white"></i></a>'
-	    + '				</td>'
-	    + '			</tr>'
-	    + '		</table>'
-	    + '</div>'
-	    + '<div id="table" class="span12" style="padding-left: 20px;"></div>';
-
-
-	function showInfo(result) {
-	    var preview = $(templateInfo), 
-		image = $('img', preview),
-		fileName = $('#filename', preview);
-		nbBricks = $('#nbBricks', preview);
-		table = $('#table', preview);
-
-	    var size = 128;
-	    image.attr('width', size);
-	    image.attr('height', size);
-	    image.attr('src', result.img);
-
-	    fileName.html(result.filename);
-		nbBricks.html(result.qtyTotal);
-		
-		table.html(result.html);
-		
-	    $('#idDivInfo').html(preview);
-	}
 	
 	function showMessage(msg){
 		message.html(msg);
@@ -189,9 +128,63 @@ function findOtherImage(elem, designId, material, id) {
 
 
 function multAllQty(coef) {
+	var qtyTotal = 0;
 	$('span[id^=idQtyFinal]').each(function () {
 		$(this).text($('#idQtyInit' + $(this).attr("id").replace('idQtyFinal', '')).val() * coef);
+		qtyTotal += eval($(this).text());
 	});
+	
+	$('#idNbPiece').text(qtyTotal);
+}
+
+
+function generateXml() {
+	var wantedListId = $("#wantedListId").val();
+	if (wantedListId == "") {
+		alert("Veuillez saisir l'identifiant de votre WantedList BrickLink.");
+		return;
+	}
+
+	var xml = "<INVENTORY>\n";
+	
+	var qtyTotalTheorique = $('#idNbPiece').text();
+	var qtyTotalVerif = 0;
+	$('span[id^=idQtyFinal]').each(function () {
+		var id = $(this).attr("id").replace('idQtyFinal', '');
+		
+		var designId = $('#idDesignId' + id).text();
+		var material = $('#idMaterial' + id).text();
+		var qty = $('#idQtyFinal' + id).text();
+		
+		xml += "	<ITEM>\n";
+        xml += "		<ITEMTYPE>P</ITEMTYPE>\n";
+        xml += "		<ITEMID>" + designId + "</ITEMID>\n";
+        xml += "		<COLOR>" + material + "</COLOR>\n";
+        xml += "		<MINQTY>" + qty + "</MINQTY>\n";
+        xml += "		<WANTEDLISTID>" + wantedListId + "</WANTEDLISTID>\n";
+    	xml += "	</ITEM>\n";
+		
+		qtyTotalVerif += eval(qty);
+	});
+	
+	xml += "</INVENTORY>";
+	
+	if (qtyTotalTheorique == qtyTotalVerif) {
+		/*var url = "http://www.bricklink.com/wantedXML.asp";
+		var win = window.open(url,'_blank');
+		win.getElementsByName("xmlFile")[0].value = "salut";
+		win.focus();*/
+		
+		$('input[name=xmlFile]').each(function() {
+			$(this).val(xml);
+		})
+		var form = $("#formValidateXML");
+		form.submit();
+		
+		//alert(xml);
+	} else {
+		alert("Les quantités ne matchent pas : il manque des pièces...(bug)");
+	}
 }
 
 //----------------------------------------------------

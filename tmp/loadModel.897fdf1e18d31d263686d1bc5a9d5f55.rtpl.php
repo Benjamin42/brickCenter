@@ -12,7 +12,7 @@
 			</tr>
 			<tr>
 				<td><span class="filename">Nombre de pièces : </span></td>
-				<td><span class="filename"><?php echo $NB_BRICKS;?></span></td>
+				<td><span class="filename" id="idNbPiece"><?php echo $NB_BRICKS;?></span></td>
 			</tr>
 			<tr>
 				<td>Nombre d'exemplaires : </td>
@@ -25,6 +25,10 @@
 						<option value="5">5</option>
 					</select>
 				</td>
+			</tr>
+			<tr>
+				<td>WantedList Id : </td>
+				<td><input id="wantedListId" type="text" value="" /></td>
 			</tr>
 			<tr>
 				<td colspan="2">
@@ -68,3 +72,7 @@
 	<?php } ?>
 
 </div>
+
+<form id="formValidateXML" action="http://www.bricklink.com/wantedXMLverify.asp" method="POST" target="_blank" >
+	<input name="xmlFile" type="hidden" value="" />
+</form>

@@ -20,7 +20,7 @@
     <script src="./tpl/./js/modernizr-2.5.3.min.js"></script>
   </head>
   <body onbeforeunload ="checkPendingTask();">
-    <header <?php if( $DC_LOGO!='' ){ ?>'style="background-image:url('<?php echo $DC_LOGO;?>')"'<?php } ?>>
+    <header>
       <section id="versionBloc"></section>
       
       <div class="preloader"> Chargement en cours...</div>

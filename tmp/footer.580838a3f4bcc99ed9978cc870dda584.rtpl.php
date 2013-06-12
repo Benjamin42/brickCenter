@@ -26,7 +26,6 @@ TODO
 
 <script type="text/javascript" src="./tpl/./js/bootstrap.min.js"></script>
 
-<span id="scriptRoot" class="hidden"><?php echo getConfig('ROOT'); ?> </span>
 
 <?php if( isset($_GET['error']) ){ ?>
 

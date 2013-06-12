@@ -15,6 +15,7 @@ foreach($_GET as $key=>$val){
   $_[$key]=htmlentities($val);
 }
 
+
 if (isset($_['action'])) {
 
   switch ($_['action']) {

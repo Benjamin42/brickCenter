@@ -6,8 +6,6 @@ require_once('php/rain.tpl.class.php');
 require_once('php/config.php');
 require_once('php/function.php');
 
-define('APP_DIR', '/Applications/MAMP/htdocs/brickCenter/');
-
 // Instanciation du template
 $tpl = new RainTPL();
 
