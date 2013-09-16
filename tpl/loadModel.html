@@ -7,7 +7,7 @@
 	<div class="span8">
 		<table width="100%">
 			<tr>
-				<td width="25%"><span class="filename">Fichier : </span></td>
+				<td width="40%"><span class="filename">Fichier : </span></td>
 				<td><span class="filename" id="filename">{$FILENAME}</span></td>
 			</tr>
 			<tr>
@@ -31,9 +31,17 @@
 				<td><input id="wantedListId" type="text" value="" /></td>
 			</tr>
 			<tr>
+			  <td>
+			    <a class="btn btn-primary" onclick="generateXmlPopup();">Generate XML in text<i class="icon-arrow-down icon-white"></i></a>
+			  </td>
+			  <td>
+			    <textarea id="xmlTextId" ></textarea>
+			  </td>
+			</tr>
+			<tr>
 				<td colspan="2">
 					<a class="btn btn-danger" onclick="findAllRef();">Find All Ref</a>
-					<a class="btn btn-success" onclick="generateXml();">Generate XML<i class="icon-arrow-down icon-white"></i></a>
+					<a class="btn btn-success" onclick="generateXml();">Generate XML in BrickLink<i class="icon-arrow-down icon-white"></i></a>					
 				</td>
 			</tr>
 		</table>

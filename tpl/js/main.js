@@ -187,6 +187,46 @@ function generateXml() {
 	}
 }
 
+function generateXmlPopup() {
+	var wantedListId = $("#wantedListId").val();
+	if (wantedListId == "") {
+		alert("Veuillez saisir l'identifiant de votre WantedList BrickLink.");
+		return;
+	}
+
+	var xml = "<INVENTORY>\n";
+	
+	var qtyTotalTheorique = $('#idNbPiece').text();
+	var qtyTotalVerif = 0;
+	$('span[id^=idQtyFinal]').each(function () {
+		var id = $(this).attr("id").replace('idQtyFinal', '');
+		
+		var designId = $('#idDesignId' + id).text();
+		var material = $('#idMaterial' + id).text();
+		var qty = $('#idQtyFinal' + id).text();
+		
+		xml += "	<ITEM>\n";
+        xml += "		<ITEMTYPE>P</ITEMTYPE>\n";
+        xml += "		<ITEMID>" + designId + "</ITEMID>\n";
+        xml += "		<COLOR>" + material + "</COLOR>\n";
+        xml += "		<MINQTY>" + qty + "</MINQTY>\n";
+        xml += "		<WANTEDLISTID>" + wantedListId + "</WANTEDLISTID>\n";
+    	xml += "	</ITEM>\n";
+		
+		qtyTotalVerif += eval(qty);
+	});
+	
+	xml += "</INVENTORY>";
+	
+	if (qtyTotalTheorique == qtyTotalVerif) {
+	    $("#xmlTextId").show();
+	    $("#xmlTextId").val(xml);
+	} else {
+	    alert("Les quantités ne matchent pas : il manque des pièces...(bug)");
+	}
+}
+
+
 //----------------------------------------------------
 
 
