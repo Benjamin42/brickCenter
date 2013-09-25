@@ -40,13 +40,8 @@ if (array_key_exists('files', $_FILES) && $_FILES['files']['error'][0] == 0 ) {
 			$listBrick = array();
 			$nbPiece = 0;
 			foreach ($s as $tmpBrick) {
-				$tradColor = extractColor($tmpBrick->material);
-				
-				$brick = getBricksImagePath($tmpBrick->designId, $tradColor);
-				$brick->qty = $tmpBrick->qty;
-				
-				array_push($listBrick, $brick);
-				$nbPiece += $brick->qty;
+				array_push($listBrick, $tmpBrick);
+				$nbPiece += $tmpBrick->qty;
 			}
 			
 			$tpl->assign('BRICKS_MAP', $listBrick);

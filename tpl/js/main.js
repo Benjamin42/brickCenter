@@ -20,48 +20,27 @@ $(function() {
 		    offsetY: 10,
 		    allowTipHover: false
 		    });
-/*
 
-	$(function () {
-		$.ajax({
- 			type: "POST",
- 			url: "details.php",
- 			data: {fname:name, id:rno}
-		}).done(function( result ) {
+	$('#uploadButton').fileupload({
+			type: 'POST',
+			autoUpload: true,
+			url: "loadModel.html",
+			dropZone : '#uploadButton',
+			maxFileSize: 5000000,
+			sequentialUploads: true,
+			add: function (e, data) {
+			pendingTask = true;
+			data.submit();
+		},
+			progress: function (e, data) {
+			var progress = parseInt(data.loaded / data.total * 100, 10);
+			$.data(data.files[0]).find('.progress').width(progress+'%');
+		},
+			success: function (result, textStatus, jqXHR) {
+			//alert(result);
 			$("#content").html( result );
-		});
- 
- 
- 		$('#uploadButton').fileupload({
- 			$.ajax({
-					type: "POST",
-					url: "details.php",
-					data: {fname:name, id:rno}
-				}).done(function( result ) {
-					$("#content").html( result );
-			});
-		});
- */
-		$('#uploadButton').fileupload({
-				type: 'POST',
-			    autoUpload: true,
-			    url: "loadModel.html",
-			    dropZone : '#uploadButton',
-			    maxFileSize: 5000000,
-			    sequentialUploads: true,
-			    add: function (e, data) {
-			    pendingTask = true;
-			    data.submit();
-			},
-			    progress: function (e, data) {
-			    var progress = parseInt(data.loaded / data.total * 100, 10);
-			    $.data(data.files[0]).find('.progress').width(progress+'%');
-			},
-			    success: function (result, textStatus, jqXHR) {
-			    //alert(result);
-			    $("#content").html( result );
-			}
-		});
+		}
+	});
 	
 	function showMessage(msg){
 		message.html(msg);
@@ -70,62 +49,6 @@ $(function() {
 	checkVersion();
 
 });
-
-function addButonSearchRef(elem, designId, material) {
-	var parent = elem.parentNode;
-	var id = elem.id.replace("idImg", "");
-	elem.remove();
-	
-	var element = document.createElement('input');
-	
-	element.type = "button";
-	element.id = "btnFindRef" + id;
-	element.className = "btn btn-danger";
-	element.value = "Find Ref";
-	element.onclick = function() {
-		findOtherImage(element, designId, material, id);
-	}
-
-	parent.appendChild(element);
-}
-
-function findAllRef() {
-	$('input[id^=btnFindRef]').each(function () {
-		$(this).click();
-	})
-}
-
-function findOtherImage(elem, designId, material, id) {
-	// Appelle Ajax pour trouver une autre image
-	if (designId == null) { designId=''; } else { designId = "&designId=" + designId}
-	if (material == null) { material=''; } else { material = "&material=" + material}
-	$.ajax({
-		url: "php/action.php?action=findOtherImage" + designId + material,
-		success: function(returnedValue){
-		
-			response = $.parseJSON(returnedValue);
-			if(response.succes){
-			
-				var parent = elem.parentNode;
-	
-				elem.remove();
-			
-				var element = document.createElement('img');
-				element.src = response.url;
-				
-				// On met à jour la couleur (qui peut avoir changé)
-				$('#idMaterial' + id).text(response.material);
-				
-				// On met à jour le designId (qui peut avoir changé)
-				$('#idDesignId' + id).text(response.designId);
-			
-				parent.appendChild(element);
-			
-			}
-		}
-	});
-}
-
 
 function multAllQty(coef) {
 	var qtyTotal = 0;
@@ -137,61 +60,33 @@ function multAllQty(coef) {
 	$('#idNbPiece').text(qtyTotal);
 }
 
-
-function generateXml() {
-	var wantedListId = $("#wantedListId").val();
-	if (wantedListId == "") {
-		alert("Veuillez saisir l'identifiant de votre WantedList BrickLink.");
-		return;
-	}
-
-	var xml = "<INVENTORY>\n";
+function generateXmlBrickLink() {
+	var xml = generateXml();
 	
-	var qtyTotalTheorique = $('#idNbPiece').text();
-	var qtyTotalVerif = 0;
-	$('span[id^=idQtyFinal]').each(function () {
-		var id = $(this).attr("id").replace('idQtyFinal', '');
-		
-		var designId = $('#idDesignId' + id).text();
-		var material = $('#idMaterial' + id).text();
-		var qty = $('#idQtyFinal' + id).text();
-		
-		xml += "	<ITEM>\n";
-        xml += "		<ITEMTYPE>P</ITEMTYPE>\n";
-        xml += "		<ITEMID>" + designId + "</ITEMID>\n";
-        xml += "		<COLOR>" + material + "</COLOR>\n";
-        xml += "		<MINQTY>" + qty + "</MINQTY>\n";
-        xml += "		<WANTEDLISTID>" + wantedListId + "</WANTEDLISTID>\n";
-    	xml += "	</ITEM>\n";
-		
-		qtyTotalVerif += eval(qty);
-	});
-	
-	xml += "</INVENTORY>";
-	
-	if (qtyTotalTheorique == qtyTotalVerif) {
-		/*var url = "http://www.bricklink.com/wantedXML.asp";
-		var win = window.open(url,'_blank');
-		win.getElementsByName("xmlFile")[0].value = "salut";
-		win.focus();*/
-		
+	if (xml != "") {
 		$('input[name=xmlFile]').each(function() {
 			$(this).val(xml);
 		})
 		var form = $("#formValidateXML");
 		form.submit();
 		
-		//alert(xml);
-	} else {
-		alert("Les quantités ne matchent pas : il manque des pièces...(bug)");
 	}
 }
 
 function generateXmlPopup() {
+	var xml = generateXml();
+	
+	if (xml != "") {
+	    $("#xmlTextId").show();
+	    $("#xmlTextId").val(xml);
+	}
+}
+
+function generateXml() {
 	var wantedListId = $("#wantedListId").val();
 	if (wantedListId == "") {
 		alert("Veuillez saisir l'identifiant de votre WantedList BrickLink.");
-		return;
+		return "";
 	}
 
 	var xml = "<INVENTORY>\n";
@@ -201,13 +96,13 @@ function generateXmlPopup() {
 	$('span[id^=idQtyFinal]').each(function () {
 		var id = $(this).attr("id").replace('idQtyFinal', '');
 		
-		var designId = $('#idDesignId' + id).text();
-		var material = $('#idMaterial' + id).text();
+		var itemId = $('#idItemId' + id).text();
+		var material = $('#idMaterial' + id).val();
 		var qty = $('#idQtyFinal' + id).text();
 		
 		xml += "	<ITEM>\n";
         xml += "		<ITEMTYPE>P</ITEMTYPE>\n";
-        xml += "		<ITEMID>" + designId + "</ITEMID>\n";
+        xml += "		<ITEMID>" + itemId + "</ITEMID>\n";
         xml += "		<COLOR>" + material + "</COLOR>\n";
         xml += "		<MINQTY>" + qty + "</MINQTY>\n";
         xml += "		<WANTEDLISTID>" + wantedListId + "</WANTEDLISTID>\n";
@@ -218,14 +113,13 @@ function generateXmlPopup() {
 	
 	xml += "</INVENTORY>";
 	
-	if (qtyTotalTheorique == qtyTotalVerif) {
-	    $("#xmlTextId").show();
-	    $("#xmlTextId").val(xml);
-	} else {
-	    alert("Les quantités ne matchent pas : il manque des pièces...(bug)");
+	if (qtyTotalTheorique != qtyTotalVerif) {
+		alert("Les quantités ne matchent pas : il manque des pièces...(bug)");
+		return "";
 	}
+	
+	return xml; 
 }
-
 
 //----------------------------------------------------
 

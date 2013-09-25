@@ -4,7 +4,7 @@
 <!--***************-->
 
 <footer> 
-TODO
+BrickCenter v0.0.7
 </footer>
 
 
