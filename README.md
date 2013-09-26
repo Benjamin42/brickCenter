@@ -18,6 +18,7 @@ Plugins :
 - RainTPL (www.raintpl.com)
 - Bootstrap (http://twitter.github.io/bootstrap)
 - KLogger (http://codefury.net/projects/klogger)
+- Sqlite
 		  
 Icones : N.A
 
